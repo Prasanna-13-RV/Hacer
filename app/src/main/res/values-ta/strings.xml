@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hacer</string>
+    <string name="todo_title">தலைப்பு</string>
+    <string name="todo_titlepla">பணி</string>
+    <string name="todo_description">விளக்கம்</string>
+    <string name="todo_descriptionpla">விளக்கம்</string>
+    <string name="addButton">Add To-do</string>
+    <string name="confirm">உறுதி</string>
+    <string name="cancel">ரத்து</string>
+    <string name="topAddBar">சேர்</string>
+    <string name="topShowTodo">செய்ய வேண்டடியவை</string>
+</resources>

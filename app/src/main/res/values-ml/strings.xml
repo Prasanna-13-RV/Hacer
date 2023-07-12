@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hacer</string>
+    <string name="todo_title">ടോഡോ ശീർഷകം</string>
+    <string name="todo_titlepla">ടാസ്ക്</string>
+    <string name="todo_description">ടോഡോ വിവരണം</string>
+    <string name="todo_descriptionpla">ടാസ്ക് വിവരണം</string>
+    <string name="addButton">ചെയ്യേണ്ടവ ചേർക്കുക</string>
+    <string name="confirm">സ്ഥിരീകരിക്കുക</string>
+    <string name="cancel">റദ്ദാക്കുക</string>
+    <string name="topAddBar">ടോഡോ ചേർക്കുക</string>
+    <string name="topShowTodo">എല്ലാം ടോഡോ</string>
+</resources>

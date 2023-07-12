@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hacer</string>
+    <string name="todo_title">शीर्षक</string>
+    <string name="todo_titlepla">काम</string>
+    <string name="todo_description">विवरण</string>
+    <string name="todo_descriptionpla">विवरण</string>
+    <string name="addButton">कार्य जोड़ें</string>
+    <string name="confirm">पुष्टि करना</string>
+    <string name="cancel">रद्द करना</string>
+    <string name="topAddBar">कार्य जोड़ें</string>
+    <string name="topShowTodo">सभी कार्य</string>
+</resources>

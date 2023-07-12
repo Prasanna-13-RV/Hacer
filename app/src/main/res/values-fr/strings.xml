@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="app_name">Hacer</string>
+    <string name="todo_title">Titre</string>
+    <string name="todo_titlepla">Tâche</string>
+    <string name="todo_description">description</string>
+    <string name="todo_descriptionpla">Description</string>
+    <string name="addButton">Ajouter</string>
+    <string name="confirm">Confirmer</string>
+    <string name="cancel">Annuler</string>
+    <string name="topAddBar">Ajouter</string>
+    <string name="topShowTodo">Tout à faire</string>
+</resources>

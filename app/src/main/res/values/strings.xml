@@ -1,0 +1,12 @@
+<resources>
+    <string name="app_name">Hacer</string>
+    <string name="todo_title">Todo Title</string>
+    <string name="todo_titlepla">Task</string>
+    <string name="todo_description">Todo description</string>
+    <string name="todo_descriptionpla">Task Description</string>
+    <string name="addButton">Add To-do</string>
+    <string name="confirm">Confirm</string>
+    <string name="cancel">Cancel</string>
+    <string name="topAddBar">Add Todo</string>
+    <string name="topShowTodo">All Todo</string>
+</resources>
