@@ -1,9 +1,14 @@
 package com.mytodo.todo.ui.files
 
+import android.content.Context
+import android.content.Intent
+import android.os.Build
 import android.widget.Toast
+import androidx.annotation.RequiresApi
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -24,6 +29,7 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.ComposableTarget
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
@@ -36,20 +42,34 @@ import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat
 import androidx.navigation.NavController
+import androidx.room.TypeConverter
+import androidx.work.OneTimeWorkRequestBuilder
+import androidx.work.WorkManager
+import androidx.work.WorkRequest
+import com.mytodo.todo.MyWork
 import com.mytodo.todo.R
+import com.mytodo.todo.data.NotificationService
+import com.mytodo.todo.di.DeleteDi
 import com.mytodo.todo.room.TodoEntity
 import com.mytodo.todo.ui.data.todoList
 import com.mytodo.todo.ui.theme.MyTodoTheme
+import com.mytodo.todo.utils.DateConvertors
 import com.mytodo.todo.viewmodel.TodoViewModel
+import java.time.LocalDateTime
 
+
+val convertors = DateConvertors()
 
 @Composable
-fun ShowTodo(navController: NavController?, viewModel : TodoViewModel?) {
+fun ShowTodo(navController: NavController?, viewModel: TodoViewModel?) {
     AppBarTopShow(navController!!)
-    Box(modifier = Modifier
-        .fillMaxSize()
-        .padding(top = 80.dp)) {
+    Box(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(top = 80.dp)
+    ) {
 //    AppNameBar()
 
         val todos by viewModel!!.todos.collectAsState(initial = emptyList())
@@ -58,10 +78,16 @@ fun ShowTodo(navController: NavController?, viewModel : TodoViewModel?) {
         AllCards(navController, todos)
         val context = LocalContext.current.applicationContext
 
-
         FloatingActionButton(
             onClick = {
                 navController.navigate("addtodo")
+//
+//                Intent(context, NotificationService::class.java).also {
+//
+//                        it.action = NotificationService.Actions.STOP.toString()
+//                        ContextCompat.startForegroundService(context, it)
+//                    }
+//
             },
             modifier = Modifier
                 .padding(all = 16.dp)
@@ -77,19 +103,46 @@ fun ShowTodo(navController: NavController?, viewModel : TodoViewModel?) {
 }
 
 @Composable
-fun AllCards(navController: NavController, todos : List<TodoEntity>) {
+fun AllCards(navController: NavController, todos: List<TodoEntity>) {
     LazyColumn(
         modifier = Modifier
             .fillMaxSize()
     ) {
+        item {
+            if (todos.isEmpty()) {
+                Text(
+                    modifier = Modifier.padding(
+                        horizontal = 10.dp
+                    ),
+                    text = "No todos found",
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 20.sp,
+                )
+            }
+        }
+
         items(todos) { todo ->
-            CardTodo(heading = todo.todoTitle, description = todo.todoDescription, navController, id = todo.todoId)
+            CardTodo(
+                heading = todo.todoTitle,
+                description = todo.todoDescription,
+                date = todo.todoDate,
+                navController,
+                id = todo.todoId
+            )
         }
     }
 }
 
+
 @Composable
-fun CardTodo(heading: String, description: String, navController : NavController, id : Int) {
+fun CardTodo(
+    heading: String,
+    description: String,
+    date: String?,
+    navController: NavController,
+    id: Int
+) {
+    val context = LocalContext.current
     Card(
         modifier = Modifier
             .fillMaxSize()
@@ -102,7 +155,7 @@ fun CardTodo(heading: String, description: String, navController : NavController
         Column(
             modifier = Modifier
                 .padding(10.dp)
-
+//                .clickable { WorkerFun(context) },
         ) {
             Text(
                 text = heading,
@@ -111,14 +164,48 @@ fun CardTodo(heading: String, description: String, navController : NavController
             )
             Text(
                 text = description,
-                Modifier.padding(start = 10.dp),
+                Modifier
+                    .padding(start = 10.dp)
+                    .clickable { convertors.dateDeletion(convertors.fromTimestamp(date!!)) },
                 maxLines = 2,
                 overflow = TextOverflow.Ellipsis,
                 softWrap = true,
             )
+
+            Row(
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                convertors.dateFormatter(convertors.fromTimestamp(date))?.let {
+                    Text(
+                        text = it,
+                        Modifier.padding(start = 10.dp),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        softWrap = true,
+                    )
+                }
+                convertors.timeFormatter(convertors.fromTimestamp(date))?.let {
+                    Text(
+                        text = it,
+                        Modifier.padding(start = 10.dp),
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        softWrap = true,
+                    )
+                }
+            }
+
         }
     }
 }
+
+//private fun WorkerFun(context: Context) {
+//    val mRequest: WorkRequest = OneTimeWorkRequestBuilder<DeleteDi>()
+//        .build()
+//
+//    WorkManager.getInstance(context)
+//        .enqueue(mRequest)
+//}
 
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -142,7 +229,7 @@ fun AppBarTopShow(navController: NavController) {
                     )
                 }
             },
-            )
+        )
     }
 }
 

@@ -1,5 +1,8 @@
 package com.mytodo.todo.ui.files
 
+import android.content.Context
+import android.content.Intent
+import android.os.Handler
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -38,10 +41,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.core.content.ContextCompat.startForegroundService
 import androidx.lifecycle.ViewModel
 import androidx.navigation.NavController
 import androidx.navigation.compose.rememberNavController
 import com.mytodo.todo.R
+import com.mytodo.todo.data.NotificationService
 import com.mytodo.todo.room.TodoEntity
 import com.mytodo.todo.ui.theme.InnerTextFieldLight
 import com.mytodo.todo.ui.theme.MyTodoTheme
@@ -162,6 +167,7 @@ fun AddTodo(
                             title,
                             description,
                             navController!!,
+                            context,
                             { alertBool = false })
                     }
 
@@ -178,14 +184,25 @@ fun AlertFunction(
     title: String,
     description: String,
     navController: NavController,
+    context : Context,
     alertBool: () -> Unit
 ) {
+
+    val handler = Handler()
+    val delayMillis = 30000
     AlertDialog(onDismissRequest = { /*TODO*/ },
         text = { Text("Confirm to add the todo") },
         confirmButton = {
             TextButton(onClick = {
                 viewModel.addMyTodo(TodoEntity(0, title, description))
                 navController.navigate("showtodo")
+                Intent(context, NotificationService::class.java).also {
+                    it.action = NotificationService.Actions.START.toString()
+                    startForegroundService(context, it)
+                }
+//                handler.postDelayed({
+//                    stopNoti(context)
+//                }, delayMillis.toLong())
             }) {
                 Text(text = stringResource(id = R.string.confirm))
             }
@@ -197,6 +214,10 @@ fun AlertFunction(
         }
     )
 }
+
+
+
+
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable

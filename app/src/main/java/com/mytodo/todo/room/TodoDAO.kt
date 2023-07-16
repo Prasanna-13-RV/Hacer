@@ -1,5 +1,8 @@
 package com.mytodo.todo.room
 
+import android.database.SQLException
+import android.os.Build
+import androidx.annotation.RequiresApi
 import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
@@ -7,6 +10,9 @@ import androidx.room.Query
 import androidx.room.Update
 import androidx.room.Upsert
 import kotlinx.coroutines.flow.Flow
+import java.sql.PreparedStatement
+import java.time.LocalDate
+import java.time.LocalDateTime
 
 @Dao
 interface TodoDAO {
@@ -26,7 +32,9 @@ interface TodoDAO {
     @Query("DELETE FROM TodoEntity WHERE todoId = :id")
     suspend fun deleteById(id : Int)
 
-//    @Update
-//    suspend fun update()
+    @Query("DELETE FROM TodoEntity WHERE todoDate <= :cutoffDate")
+    fun deleteItemsOlderThan(cutoffDate: Long)
+
+
 
 }
